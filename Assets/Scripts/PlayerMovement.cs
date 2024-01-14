@@ -26,11 +26,15 @@ public class PlayerMovement : MonoBehaviour
 
     }
 
+    private void OnDestroy()
+    {
+        GameManager.onAfterStateChanged -= OnStateChange;
+    }
+
     private void Start()
     {
         gridHandler = GameManager.instance.levelGrid.GetComponent<GridHandler>();
         transform.position = gridHandler.GetHere(startingPos);
-        Debug.Log($"Starting position {transform.position}");
         gridHandler.ColorPos(transform.position);
     }
 

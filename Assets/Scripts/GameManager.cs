@@ -37,28 +37,39 @@ public class GameManager : MonoBehaviour
         }
         onAfterStateChanged += OnStateChange;
         stateChanges = 0;
+        levels = new int[][,]
+        {
+            new int[,] {
+                { 1, 1, 1, 1, 1 },
+                { 0, 0, 0, 0, 1 },
+                { 1, 0, 0, 1, 0 },
+                { 1, 1, 0, 0, 0 },
+                { 1, 1, 1, 1, 1 }
+            },
+            new int[,] {
+                { 1, 1, 1, 0, 1 },
+                { 1, 0, 0, 0, 0 },
+                { 1, 0, 0, 1, 0 },
+                { 1, 1, 0, 1, 1 },
+                { 1, 0, 0, 1, 1 }
+            }
+        };
+        unlockedLevel = 0;
+    }
 
-        Debug.Log($"Is null state equal to first? State at awake: {state}. State compared to first state: {state == (GameState)0}");
+    private void OnDestroy()
+    {
+        onAfterStateChanged -= OnStateChange;
     }
     private void Start()
     {
-        ChangeState(GameState.Starting);
+        LoadLevel();
     }
 
     private void OnStateChange(GameState newState)
     {
         switch (newState)
         {
-            case GameState.Starting:
-                HandleStarting();
-                ChangeState(GameState.LoadingLevel);
-                break;
-            case GameState.LoadingLevel:
-                HandleLoadingLevel();
-                ChangeState(GameState.Playing);
-                break;
-            case GameState.LoadingPlayer:
-                break;
             case GameState.Playing:
                 HandlePlaying();
                 break;
@@ -90,8 +101,6 @@ public class GameManager : MonoBehaviour
         state = newState;
 
         onAfterStateChanged?.Invoke(newState);
-        Debug.Log($"Change to state {newState} completed");
-
     }
 
     public void IncreaseScore(int points)
@@ -99,29 +108,23 @@ public class GameManager : MonoBehaviour
         score += points;
     }
 
-    private void HandleStarting()
+    public void ClearLevel()
     {
-        levels = new int[][,] 
-        { 
-            new int[,] {
-                { 1, 1, 1, 1, 1 },
-                { 0, 0, 0, 0, 1 },
-                { 1, 0, 0, 1, 0 },
-                { 1, 1, 0, 0, 0 },
-                { 1, 1, 1, 1, 1 }
-            },
-            new int[,] {
-                { 1, 1, 1, 0, 1 },
-                { 1, 0, 0, 0, 0 },
-                { 1, 0, 0, 1, 0 },
-                { 1, 1, 0, 1, 1 },
-                { 1, 0, 0, 1, 1 }
-            }
-        };
-        unlockedLevel = 0;
+        unlockedLevel++;
+        if (unlockedLevel >= levels.Length)
+        {
+            ChangeState(GameState.ClearedSet);
+        }
+        ChangeState(GameState.ClearedLevel);
     }
 
-    private void HandleLoadingLevel()
+    public void ResetLevel()
+    {
+        unlockedLevel--;
+        LoadLevel();
+    }
+
+    public void LoadLevel()
     {
         if (levelGrid != null)
         {
@@ -135,6 +138,7 @@ public class GameManager : MonoBehaviour
         }
         player = Instantiate(playerPrefab, new Vector3(0, 0, 0), Quaternion.identity);
         score = 0;
+        ChangeState(GameState.Playing);
     }
 
     private void HandlePlaying()
@@ -143,15 +147,6 @@ public class GameManager : MonoBehaviour
 
     private void HandleClearedLevel()
     {
-        unlockedLevel++;
-        Destroy(levelGrid);
-        Destroy(player);
-        if (unlockedLevel >= levels.Length)
-        {
-            ChangeState(GameState.ClearedSet);
-            return;
-        }
-        ChangeState(GameState.LoadingLevel);
     }
 
     private void HandleClearedSet()
@@ -163,10 +158,7 @@ public class GameManager : MonoBehaviour
 [Serializable]
 public enum GameState
 {
-    Null,
-    Starting,
-    LoadingLevel,
-    LoadingPlayer,
+    None,
     Playing,
     ClearedLevel,
     ClearedSet,

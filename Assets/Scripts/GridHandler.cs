@@ -112,24 +112,30 @@ public class GridHandler : MonoBehaviour
 
         playerMoves[nextRow, nextCol] = 0;
 
-        bool completed = true;
-        for (int row = 0; row < level.GetLength(0); row ++)
+        
+        if (IsLevelCleared())
         {
-            for (int col = 0; col < level.GetLength(1); col ++)
-            {
-                if (level[row,col] != playerMoves[row, col])
-                {
-                    completed = false; break;
-                }
-            }
-        }
-        if (completed)
-        {
-            Debug.Log("Success");
-            GameManager.instance.ChangeState(GameState.ClearedLevel);
+            GameManager.instance.ClearLevel();
         }
 
         return grid[nextRow, nextCol].transform.position;
+    }
+
+    private bool IsLevelCleared()
+    {
+        bool isCompleted = true;
+        for (int row = 0; row < level.GetLength(0); row++)
+        {
+            for (int col = 0; col < level.GetLength(1); col++)
+            {
+                if (level[row, col] != playerMoves[row, col])
+                {
+                    isCompleted = false; break;
+                }
+            }
+        }
+
+        return isCompleted;
     }
 
     private (int, int) VectorToIndex(Vector3 pos)
