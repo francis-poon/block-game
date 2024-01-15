@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class GameScreenManager : MonoBehaviour
 {
-    [Header("In Game Elements")]
+    [Header("In Game Display")]
     [SerializeField]
     private GameObject levelDisplay;
     [SerializeField]
@@ -16,7 +16,7 @@ public class GameScreenManager : MonoBehaviour
     private GameObject scoreText;
     
 
-    [Header("Cleared Level Elements")]
+    [Header("Cleared Level Display")]
     [SerializeField]
     private GameObject clearedLevelDisplay;
     [SerializeField]
@@ -26,13 +26,18 @@ public class GameScreenManager : MonoBehaviour
     [SerializeField]
     private GameObject nextLevelButton;
 
-    public bool updateScore;
-    public GameState lastState;
+    [Header("Paused Display")]
+    [SerializeField]
+    private GameObject pausedDisplay;
+
+    private bool updateScore;
+    private bool paused;
 
     private void Awake()
     {
         GameManager.onAfterStateChanged += OnStateChanged;
         updateScore = false;
+        paused = false;
     }
 
     private void OnDestroy()
@@ -46,34 +51,50 @@ public class GameScreenManager : MonoBehaviour
 
     private void Update()
     {
-        if (!updateScore)
+        if (Input.GetKeyDown(KeyCode.Escape) && (GameManager.instance.state == GameState.Playing || GameManager.instance.state == GameState.Paused))
         {
-            return;
+            paused = !paused;
+            if (paused)
+            {
+                GameManager.instance.ChangeState(GameState.Paused);
+            }
+            else
+            {
+                GameManager.instance.ChangeState(GameState.Playing);
+            }
         }
 
-        scoreText.GetComponent<TextMeshProUGUI>().text = $"{GameManager.instance.score}";
+        if (updateScore)
+        {
+            scoreText.GetComponent<TextMeshProUGUI>().text = $"{GameManager.instance.score}";
+        }
     }
 
     private void OnStateChanged(GameState newState)
     {
-        Debug.Log($"Game Screen received {newState}");
-        lastState = newState;
+        updateScore = false;
         switch (newState)
         {
             case GameState.Playing:
                 Debug.Log("Game Screen received playing state");
                 levelDisplay.SetActive(true);
                 clearedLevelDisplay.SetActive(false);
+                pausedDisplay.SetActive(false);
                 levelText.GetComponent<TextMeshProUGUI>().text = $"Level {GameManager.instance.currentLevel + 1}";
                 updateScore = true;
+                break;
+            case GameState.Paused:
+                levelDisplay.SetActive(true);
+                clearedLevelDisplay.SetActive(false);
+                pausedDisplay.SetActive(true);
                 break;
             case GameState.ClearedLevel:
                 clearedDisplayTitle.GetComponent<TextMeshProUGUI>().text = GameManager.instance.HasNextLevel() ? "CLEARED" : "COMPLETE";
                 clearedScoreText.GetComponent<TextMeshProUGUI>().text = $"Score: {GameManager.instance.score}";
                 levelDisplay.SetActive(false);
                 clearedLevelDisplay.SetActive(true);
+                pausedDisplay.SetActive(false);
                 nextLevelButton.GetComponent<Button>().interactable = GameManager.instance.HasNextLevel();
-
                 break;
         }
     }
@@ -87,8 +108,15 @@ public class GameScreenManager : MonoBehaviour
         GameManager.instance.LoadLevel();
     }
 
+    public void ResetLevel()
+    {
+        paused = false;
+        GameManager.instance.LoadLevel();
+    }
+
     public void Retry()
     {
+        paused = false;
         GameManager.instance.ResetLevel();
     }
 
@@ -107,5 +135,11 @@ public class GameScreenManager : MonoBehaviour
     public void QuitGame()
     {
         Application.Quit();
+    }
+
+    public void Resume()
+    {
+        paused = false;
+        GameManager.instance.ChangeState(GameState.Playing);
     }
 }
