@@ -17,9 +17,8 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private GameObject playerPrefab;
 
-    private int[][,] levels;
-    public int unlockedLevel { get; private set; }
     public GameObject levelGrid { get; private set; }
+    public int currentLevel { get; private set; }
     private GameObject player;
 
     public int stateChanges;
@@ -37,24 +36,7 @@ public class GameManager : MonoBehaviour
         }
         onAfterStateChanged += OnStateChange;
         stateChanges = 0;
-        levels = new int[][,]
-        {
-            new int[,] {
-                { 1, 1, 1, 1, 1 },
-                { 0, 0, 0, 0, 1 },
-                { 1, 0, 0, 1, 0 },
-                { 1, 1, 0, 0, 0 },
-                { 1, 1, 1, 1, 1 }
-            },
-            new int[,] {
-                { 1, 1, 1, 0, 1 },
-                { 1, 0, 0, 0, 0 },
-                { 1, 0, 0, 1, 0 },
-                { 1, 1, 0, 1, 1 },
-                { 1, 0, 0, 1, 1 }
-            }
-        };
-        unlockedLevel = 0;
+        currentLevel = GameData.selectedLevel;
     }
 
     private void OnDestroy()
@@ -110,18 +92,20 @@ public class GameManager : MonoBehaviour
 
     public void ClearLevel()
     {
-        unlockedLevel++;
-        if (unlockedLevel >= levels.Length)
-        {
-            ChangeState(GameState.ClearedSet);
-        }
+        currentLevel++;
+        GameData.unlockedLevel = Mathf.Max(currentLevel, GameData.unlockedLevel);
         ChangeState(GameState.ClearedLevel);
     }
 
     public void ResetLevel()
     {
-        unlockedLevel--;
+        currentLevel--;
         LoadLevel();
+    }
+
+    public bool HasNextLevel()
+    {
+        return currentLevel < GameData.levels.GetLength(0);
     }
 
     public void LoadLevel()
@@ -131,7 +115,7 @@ public class GameManager : MonoBehaviour
             Destroy(levelGrid);
         }
         levelGrid = Instantiate(gridPrefab, new Vector3(0, 0, 0), Quaternion.identity);
-        levelGrid.GetComponent<GridHandler>().LoadLevel(levels[unlockedLevel]);
+        levelGrid.GetComponent<GridHandler>().LoadLevel(GameData.levels[currentLevel]);
         if (player != null)
         {
             Destroy(player);

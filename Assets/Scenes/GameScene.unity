@@ -1173,7 +1173,7 @@ GameObject:
   m_Component:
   - component: {fileID: 830562663}
   m_Layer: 5
-  m_Name: ClearedPanel
+  m_Name: TitlePanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2137,10 +2137,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
+      - m_Target: {fileID: 1746286632}
+        m_TargetAssemblyTypeName: GameScreenManager, Assembly-CSharp
+        m_MethodName: GoToLevelSelect
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -2836,11 +2836,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81c7a83873e6ba44492a6561cb52996d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  levelDisplay: {fileID: 1227078595}
   levelText: {fileID: 1975485284}
   scoreText: {fileID: 632919187}
-  clearedScoreText: {fileID: 668713661}
-  levelDisplay: {fileID: 1227078595}
   clearedLevelDisplay: {fileID: 1486741314}
+  clearedScoreText: {fileID: 668713661}
+  clearedDisplayTitle: {fileID: 903583177}
+  nextLevelButton: {fileID: 1154354898}
   updateScore: 0
   lastState: 0
 --- !u!1 &1751146655
