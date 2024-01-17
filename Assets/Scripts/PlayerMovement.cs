@@ -16,7 +16,6 @@ public class PlayerMovement : MonoBehaviour
     private void Awake()
     {
         active = false;
-        startingPos = new Vector3(0, 0, 0);
         inputCount = 0;
         upPressed = false;
         downPressed = false;
@@ -34,6 +33,7 @@ public class PlayerMovement : MonoBehaviour
     private void Start()
     {
         gridHandler = GameManager.instance.levelGrid.GetComponent<GridHandler>();
+        startingPos = GameData.levels[GameManager.instance.currentLevel].startingPos;
         transform.position = gridHandler.GetHere(startingPos);
         gridHandler.ColorPos(transform.position);
     }

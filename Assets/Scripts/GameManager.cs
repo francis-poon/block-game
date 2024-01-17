@@ -92,6 +92,7 @@ public class GameManager : MonoBehaviour
 
     public void ClearLevel()
     {
+        GameData.levels[currentLevel].AddScore(score);
         currentLevel++;
         GameData.unlockedLevel = Mathf.Max(currentLevel, GameData.unlockedLevel);
         ChangeState(GameState.ClearedLevel);
@@ -115,7 +116,7 @@ public class GameManager : MonoBehaviour
             Destroy(levelGrid);
         }
         levelGrid = Instantiate(gridPrefab, new Vector3(0, 0, 0), Quaternion.identity);
-        levelGrid.GetComponent<GridHandler>().LoadLevel(GameData.levels[currentLevel]);
+        levelGrid.GetComponent<GridHandler>().LoadLevel(GameData.levels[currentLevel].level);
         if (player != null)
         {
             Destroy(player);
