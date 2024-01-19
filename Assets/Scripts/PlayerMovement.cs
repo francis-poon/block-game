@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,6 +13,7 @@ public class PlayerMovement : MonoBehaviour
     private bool upPressed, downPressed, leftPressed, rightPressed;
     private bool active;
     private Vector3 startingPos;
+    private Vector3 previousPos;
 
     private void Awake()
     {
@@ -35,6 +37,7 @@ public class PlayerMovement : MonoBehaviour
         gridHandler = GameManager.instance.levelGrid.GetComponent<GridHandler>();
         startingPos = GameData.levels[GameManager.instance.currentLevel].startingPos;
         transform.position = gridHandler.GetHere(startingPos);
+        previousPos = transform.position;
         gridHandler.ColorPos(transform.position);
     }
 
@@ -46,7 +49,6 @@ public class PlayerMovement : MonoBehaviour
             if (!upPressed)
             {
                 upPressed = true;
-                GameManager.instance.IncreaseScore(1);
                 transform.position = gridHandler.GetUp(transform.position);
                 gridHandler.ColorPos(transform.position);
             }
@@ -56,7 +58,6 @@ public class PlayerMovement : MonoBehaviour
             if(!downPressed)
             {
                 downPressed = true;
-                GameManager.instance.IncreaseScore(1);
                 transform.position = gridHandler.GetDown(transform.position);
                 gridHandler.ColorPos(transform.position);
             }
@@ -66,7 +67,6 @@ public class PlayerMovement : MonoBehaviour
             if(!leftPressed)
             {
                 leftPressed = true;
-                GameManager.instance.IncreaseScore(1);
                 transform.position = gridHandler.GetLeft(transform.position);
                 gridHandler.ColorPos(transform.position);
             }
@@ -76,13 +76,15 @@ public class PlayerMovement : MonoBehaviour
             if(!rightPressed)
             {
                 rightPressed = true;
-                GameManager.instance.IncreaseScore(1);
                 transform.position = gridHandler.GetRight(transform.position);
                 gridHandler.ColorPos(transform.position);
             }
         }
-        
-        if(upPressed && Input.GetKeyUp(KeyCode.UpArrow))
+
+        CheckIncreaseScore();
+        previousPos = transform.position;
+
+        if (upPressed && Input.GetKeyUp(KeyCode.UpArrow))
         {
             upPressed = false;
         }
@@ -97,6 +99,14 @@ public class PlayerMovement : MonoBehaviour
         if(rightPressed && Input.GetKey(KeyCode.RightArrow))
         {
             rightPressed = false;
+        }
+    }
+
+    private void CheckIncreaseScore()
+    {
+        if ((transform.position - previousPos).magnitude > 0.1)
+        {
+            GameManager.instance.IncreaseScore(1);
         }
     }
 
