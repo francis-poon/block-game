@@ -14,6 +14,8 @@ public class GameScreenManager : MonoBehaviour
     private GameObject levelText;
     [SerializeField]
     private GameObject scoreText;
+    [SerializeField]
+    private GameObject bestScoreText;
     
 
     [Header("Cleared Level Display")]
@@ -46,7 +48,7 @@ public class GameScreenManager : MonoBehaviour
     }
     private void Start()
     {
-        
+        bestScoreText.GetComponent<TextMeshProUGUI>().text = $"{GameData.levels[GameManager.instance.currentLevel].bestScore}";
     }
 
     private void Update()
@@ -82,6 +84,7 @@ public class GameScreenManager : MonoBehaviour
                 pausedDisplay.SetActive(false);
                 levelText.GetComponent<TextMeshProUGUI>().text = $"Level {GameManager.instance.currentLevel + 1}";
                 updateScore = true;
+                bestScoreText.GetComponent<TextMeshProUGUI>().text = $"{GameData.levels[GameManager.instance.currentLevel].bestScore}";
                 break;
             case GameState.Paused:
                 levelDisplay.SetActive(true);
