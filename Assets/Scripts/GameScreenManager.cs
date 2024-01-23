@@ -27,6 +27,8 @@ public class GameScreenManager : MonoBehaviour
     private GameObject clearedDisplayTitle;
     [SerializeField]
     private GameObject nextLevelButton;
+    [SerializeField]
+    private GameObject rewardDisplay;
 
     [Header("Paused Display")]
     [SerializeField]
@@ -34,12 +36,14 @@ public class GameScreenManager : MonoBehaviour
 
     private bool updateScore;
     private bool paused;
+    private GameObject[] unlockables;
 
     private void Awake()
     {
         GameManager.onAfterStateChanged += OnStateChanged;
         updateScore = false;
         paused = false;
+        unlockables = new GameObject[GameData.levels.GetLength(0)];
     }
 
     private void OnDestroy()
@@ -49,6 +53,19 @@ public class GameScreenManager : MonoBehaviour
     private void Start()
     {
         bestScoreText.GetComponent<TextMeshProUGUI>().text = $"{GameData.levels[GameManager.instance.currentLevel].bestScore}";
+        for (int c = 0; c < GameData.levels.GetLength(0); c ++)
+        {
+            GameObject reward = new GameObject();
+            reward.transform.SetParent(rewardDisplay.transform);
+            reward.transform.localEulerAngles = Vector3.zero;
+            reward.transform.localScale = Vector3.one;
+            reward.transform.localPosition = Vector3.zero;
+            reward.AddComponent<SpriteRenderer>();
+            reward.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>(GameData.rewards[c]);
+            reward.GetComponent<SpriteRenderer>().sortingLayerName = GameData.GUI_LAYER; 
+            reward.GetComponent<SpriteRenderer>().sortingOrder = 1;
+            unlockables[c] = reward;
+        }
     }
 
     private void Update()
@@ -98,6 +115,10 @@ public class GameScreenManager : MonoBehaviour
                 clearedLevelDisplay.SetActive(true);
                 pausedDisplay.SetActive(false);
                 nextLevelButton.GetComponent<Button>().interactable = GameManager.instance.HasNextLevel();
+                for (int c = 0; c < GameData.levels.GetLength(0); c ++)
+                {
+                    unlockables[c].SetActive(c + 1 <= GameData.unlockedLevel);
+                }
                 break;
         }
     }

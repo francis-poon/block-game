@@ -24,6 +24,8 @@ public class PlayerMovement : MonoBehaviour
         leftPressed = false;
         rightPressed = false;
         GameManager.onAfterStateChanged += OnStateChange;
+        this.GetComponent<SpriteRenderer>().sortingLayerName = GameData.GAME_LAYER;
+        this.GetComponent<SpriteRenderer>().sortingOrder = 2;
 
     }
 

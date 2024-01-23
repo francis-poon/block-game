@@ -5,6 +5,9 @@ using UnityEngine;
 
 public static class GameData
 {
+    public static readonly string GAME_LAYER = "Default";
+    public static readonly string GUI_LAYER = "GUI";
+
     public static int unlockedLevel = 0;
     public static int selectedLevel = 0;
     public static Level[] levels = new Level[]

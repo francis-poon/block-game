@@ -39,6 +39,8 @@ public class GridHandler : MonoBehaviour
         width = level.GetLength(1);
         background = Instantiate(backgroundPrefab, transform);
         background.transform.localScale = new Vector3(width, height, 1);
+        background.GetComponent<SpriteRenderer>().sortingLayerName = GameData.GAME_LAYER;
+        background.GetComponent<SpriteRenderer>().sortingOrder = 0;
         rowMod = (float)height / 2 - (float)height + 0.5f;
         colMod = (float)width / 2 - (float)width + 0.5f;
         this.level = new int[height, width];
@@ -51,6 +53,8 @@ public class GridHandler : MonoBehaviour
             {
                 this.level[row, col] = level[row, col];
                 grid[row, col] = Instantiate(gridSquarePrefab, new Vector2(col + colMod, -(row + rowMod)), Quaternion.identity, transform);
+                grid[row, col].GetComponent<SpriteRenderer>().sortingLayerName = GameData.GAME_LAYER;
+                grid[row, col].GetComponent<SpriteRenderer>().sortingOrder = 1;
                 if (level[row, col] == 0)
                 {
                     grid[row, col].GetComponent<SpriteRenderer>().color = gridHoleColor;
