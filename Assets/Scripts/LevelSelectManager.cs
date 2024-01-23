@@ -15,6 +15,8 @@ public class LevelSelectManager : MonoBehaviour
     [Header("Attributes")]
     [SerializeField]
     private GameObject levelSelectGrid;
+    [SerializeField]
+    private GameObject rewardDisplay;
 
     private GameObject[] levelSelectButtons;
 
@@ -33,6 +35,15 @@ public class LevelSelectManager : MonoBehaviour
             levelSelectButtons[c].GetComponent<Button>().onClick.AddListener(() => SelectLevel(levelIndex));
             levelSelectButtons[c].GetComponent<Button>().onClick.AddListener(StartGame);
             levelSelectButtons[c].GetComponent<Button>().interactable = c <= GameData.unlockedLevel;
+            GameObject reward = new GameObject();
+            reward.transform.SetParent(rewardDisplay.transform);
+            reward.transform.localEulerAngles = Vector3.zero;
+            reward.transform.localScale = Vector3.one;
+            reward.transform.localPosition = Vector3.zero;
+            reward.AddComponent<SpriteRenderer>();
+            reward.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>(GameData.rewards[c]);
+            reward.GetComponent<SpriteRenderer>().sortingOrder = 1;
+            reward.SetActive(c + 1 <= GameData.unlockedLevel);
         }
         
     }

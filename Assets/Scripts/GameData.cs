@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml.Serialization;
 using UnityEngine;
 
 public static class GameData
@@ -107,6 +108,11 @@ public static class GameData
             { 1, 1, 1, 1, 0 }
         }, new Vector2(0,0))
     };
+
+    public static string[] rewards = new string[] { "sets/1/romeo_01", "sets/1/romeo_02", "sets/1/romeo_03", "sets/1/romeo_04",
+        "sets/1/romeo_05", "sets/1/romeo_06", "sets/1/romeo_07", "sets/1/romeo_08", "sets/1/romeo_09", "sets/1/romeo_10",
+        "sets/1/romeo_11", "sets/1/romeo_12", "sets/1/romeo_13", "sets/1/romeo_14" };
+
 
     public static string homeScreenDisplay = "home";
 }
