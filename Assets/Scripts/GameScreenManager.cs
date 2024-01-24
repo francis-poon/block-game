@@ -29,6 +29,12 @@ public class GameScreenManager : MonoBehaviour
     private GameObject nextLevelButton;
     [SerializeField]
     private GameObject rewardDisplay;
+    [SerializeField]
+    private float unlockedPieceFadeInDelay;
+    [SerializeField]
+    private float unlockedPieceFadeInTime;
+    [SerializeField]
+    private Color unlockableHiddenColor;
 
     [Header("Paused Display")]
     [SerializeField]
@@ -117,7 +123,12 @@ public class GameScreenManager : MonoBehaviour
                 nextLevelButton.GetComponent<Button>().interactable = GameManager.instance.HasNextLevel();
                 for (int c = 0; c < GameData.levels.GetLength(0); c ++)
                 {
-                    unlockables[c].SetActive(c + 1 <= GameData.unlockedLevel);
+                    unlockables[c].SetActive(c < GameData.unlockedLevel);
+                    if (c+1 == GameManager.instance.currentLevel)
+                    {
+                        unlockables[c].GetComponent<SpriteRenderer>().color = unlockableHiddenColor;
+                        StartCoroutine(GameObjectUtils.FadeTo(unlockables[c].GetComponent<SpriteRenderer>(), Color.white, unlockedPieceFadeInDelay * (1f-1f/(2f+GameData.unlockedLevel)), unlockedPieceFadeInTime));
+                    }
                 }
                 break;
         }

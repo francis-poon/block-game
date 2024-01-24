@@ -5987,6 +5987,9 @@ MonoBehaviour:
   clearedDisplayTitle: {fileID: 903583177}
   nextLevelButton: {fileID: 1154354898}
   rewardDisplay: {fileID: 733270685}
+  unlockedPieceFadeInDelay: 0.6
+  unlockedPieceFadeInTime: 1.1
+  unlockableHiddenColor: {r: 1, g: 1, b: 1, a: 0}
   pausedDisplay: {fileID: 697302488}
 --- !u!1 &1747837484
 GameObject:
