@@ -116,16 +116,10 @@ public class GridHandler : MonoBehaviour
 
         playerMoves[nextRow, nextCol] = 0;
 
-        
-        if (IsLevelCleared())
-        {
-            GameManager.instance.ClearLevel();
-        }
-
         return grid[nextRow, nextCol].transform.position;
     }
 
-    private bool IsLevelCleared()
+    public bool IsLevelCleared()
     {
         bool isCompleted = true;
         for (int row = 0; row < level.GetLength(0); row++)

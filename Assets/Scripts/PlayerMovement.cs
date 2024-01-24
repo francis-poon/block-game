@@ -102,6 +102,11 @@ public class PlayerMovement : MonoBehaviour
         {
             rightPressed = false;
         }
+
+        if (gridHandler.IsLevelCleared())
+        {
+            GameManager.instance.ClearLevel();
+        }
     }
 
     private void CheckIncreaseScore()
