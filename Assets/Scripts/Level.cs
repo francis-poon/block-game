@@ -6,12 +6,13 @@ public class Level
 {
     public readonly int[,] level;
     public readonly Vector2 startingPos;
-    public int bestScore { get; private set; }
-    public Level(int[,] level, Vector2 startingLevel)
+    public readonly string rewardFileName;
+
+    public Level(int[,] level, Vector2 startingLevel, string rewardFileName)
     {
         this.level = level;
         this.startingPos = startingLevel;
-        bestScore = 0;
+        this.rewardFileName = rewardFileName;
     }
 
     public bool AddScore(int score)

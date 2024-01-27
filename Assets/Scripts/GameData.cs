@@ -1,6 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Xml.Serialization;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public static class GameData
@@ -112,10 +115,28 @@ public static class GameData
         }, new Vector2(0,0))
     };
 
-    public static string[] rewards = new string[] { "sets/1/romeo_01", "sets/1/romeo_02", "sets/1/romeo_03", "sets/1/romeo_04",
+    public static string[] rewards = new string[] { , "sets/1/romeo_02", "sets/1/romeo_03", "sets/1/romeo_04",
         "sets/1/romeo_05", "sets/1/romeo_06", "sets/1/romeo_07", "sets/1/romeo_08", "sets/1/romeo_09", "sets/1/romeo_10",
         "sets/1/romeo_11", "sets/1/romeo_12", "sets/1/romeo_13", "sets/1/romeo_14" };
 
 
     public static string homeScreenDisplay = "home";
+
+    public static void Test()
+    {
+        levels.Serialize();
+    }
+    //void SaveGame()
+    //{
+    //    BinaryFormatter bf = new BinaryFormatter();
+    //    FileStream file = File.Create(Application.persistentDataPath
+    //                 + "/MySaveData.dat");
+    //    SaveData data = new SaveData();
+    //    data.savedInt = intToSave;
+    //    data.savedFloat = floatToSave;
+    //    data.savedBool = boolToSave;
+    //    bf.Serialize(file, data);
+    //    file.Close();
+    //    Debug.Log("Game data saved!");
+    //}
 }
