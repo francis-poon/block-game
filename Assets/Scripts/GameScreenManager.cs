@@ -49,7 +49,7 @@ public class GameScreenManager : MonoBehaviour
         GameManager.onAfterStateChanged += OnStateChanged;
         updateScore = false;
         paused = false;
-        unlockables = new GameObject[GameData.levels.GetLength(0)];
+        unlockables = new GameObject[GameData.levelSet.levels.GetLength(0)];
     }
 
     private void OnDestroy()
@@ -58,8 +58,8 @@ public class GameScreenManager : MonoBehaviour
     }
     private void Start()
     {
-        bestScoreText.GetComponent<TextMeshProUGUI>().text = $"{GameData.levels[GameManager.instance.currentLevel].bestScore}";
-        for (int c = 0; c < GameData.levels.GetLength(0); c ++)
+        bestScoreText.GetComponent<TextMeshProUGUI>().text = $"{GameData.playerData.GetBestScore(GameData.levelSet.levels[GameManager.instance.currentLevel].id)}";
+        for (int c = 0; c < GameData.levelSet.levels.GetLength(0); c ++)
         {
             GameObject reward = new GameObject();
             reward.transform.SetParent(rewardDisplay.transform);
@@ -67,7 +67,7 @@ public class GameScreenManager : MonoBehaviour
             reward.transform.localScale = Vector3.one;
             reward.transform.localPosition = Vector3.zero;
             reward.AddComponent<SpriteRenderer>();
-            reward.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>(GameData.rewards[c]);
+            reward.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>(GameData.levelSet.levels[c].rewardFileName);
             reward.GetComponent<SpriteRenderer>().sortingLayerName = GameData.GUI_LAYER; 
             reward.GetComponent<SpriteRenderer>().sortingOrder = 1;
             unlockables[c] = reward;
@@ -107,7 +107,7 @@ public class GameScreenManager : MonoBehaviour
                 pausedDisplay.SetActive(false);
                 levelText.GetComponent<TextMeshProUGUI>().text = $"Level {GameManager.instance.currentLevel + 1}";
                 updateScore = true;
-                bestScoreText.GetComponent<TextMeshProUGUI>().text = $"{GameData.levels[GameManager.instance.currentLevel].bestScore}";
+                bestScoreText.GetComponent<TextMeshProUGUI>().text = $"{GameData.playerData.GetBestScore(GameData.levelSet.levels[GameManager.instance.currentLevel].id)}";
                 break;
             case GameState.Paused:
                 levelDisplay.SetActive(true);
@@ -121,13 +121,13 @@ public class GameScreenManager : MonoBehaviour
                 clearedLevelDisplay.SetActive(true);
                 pausedDisplay.SetActive(false);
                 nextLevelButton.GetComponent<Button>().interactable = GameManager.instance.HasNextLevel();
-                for (int c = 0; c < GameData.levels.GetLength(0); c ++)
+                for (int c = 0; c < GameData.levelSet.levels.GetLength(0); c ++)
                 {
-                    unlockables[c].SetActive(c < GameData.unlockedLevel);
+                    unlockables[c].SetActive(c < GameData.playerData.unlockedLevel);
                     if (c+1 == GameManager.instance.currentLevel)
                     {
                         unlockables[c].GetComponent<SpriteRenderer>().color = unlockableHiddenColor;
-                        StartCoroutine(GameObjectUtils.FadeTo(unlockables[c].GetComponent<SpriteRenderer>(), Color.white, unlockedPieceFadeInDelay * (1f-1f/(2f+GameData.unlockedLevel)), unlockedPieceFadeInTime));
+                        StartCoroutine(GameObjectUtils.FadeTo(unlockables[c].GetComponent<SpriteRenderer>(), Color.white, unlockedPieceFadeInDelay * (1f-1f/(2f+GameData.playerData.unlockedLevel)), unlockedPieceFadeInTime));
                     }
                 }
                 break;

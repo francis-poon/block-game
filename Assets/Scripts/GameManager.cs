@@ -92,9 +92,9 @@ public class GameManager : MonoBehaviour
 
     public void ClearLevel()
     {
-        GameData.levels[currentLevel].AddScore(score);
+        GameData.playerData.AddScore(GameData.levelSet.levels[currentLevel].id, score);
         currentLevel++;
-        GameData.unlockedLevel = Mathf.Max(currentLevel, GameData.unlockedLevel);
+        GameData.playerData.unlockedLevel = Mathf.Max(currentLevel, GameData.playerData.unlockedLevel);
         ChangeState(GameState.ClearedLevel);
     }
 
@@ -106,7 +106,7 @@ public class GameManager : MonoBehaviour
 
     public bool HasNextLevel()
     {
-        return currentLevel < GameData.levels.GetLength(0);
+        return currentLevel < GameData.levelSet.levels.GetLength(0);
     }
 
     public void LoadLevel()
@@ -116,7 +116,7 @@ public class GameManager : MonoBehaviour
             Destroy(levelGrid);
         }
         levelGrid = Instantiate(gridPrefab, new Vector3(0, 0, 0), Quaternion.identity);
-        levelGrid.GetComponent<GridHandler>().LoadLevel(GameData.levels[currentLevel].level);
+        levelGrid.GetComponent<GridHandler>().LoadLevel(GameData.levelSet.levels[currentLevel].level);
         if (player != null)
         {
             Destroy(player);

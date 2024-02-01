@@ -37,7 +37,7 @@ public class PlayerMovement : MonoBehaviour
     private void Start()
     {
         gridHandler = GameManager.instance.levelGrid.GetComponent<GridHandler>();
-        startingPos = GameData.levels[GameManager.instance.currentLevel].startingPos;
+        startingPos = GameData.levelSet.levels[GameManager.instance.currentLevel].startingPos;
         transform.position = gridHandler.GetHere(startingPos);
         previousPos = transform.position;
         gridHandler.ColorPos(transform.position);

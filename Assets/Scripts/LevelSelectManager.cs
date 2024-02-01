@@ -39,29 +39,29 @@ public class LevelSelectManager : MonoBehaviour
 
     private void Awake()
     {
-        levelSelectButtons = new GameObject[GameData.levels.GetLength(0)];
-        unlockables = new GameObject[GameData.levels.GetLength(0)];
+        levelSelectButtons = new GameObject[GameData.levelSet.levels.GetLength(0)];
+        unlockables = new GameObject[GameData.levelSet.levels.GetLength(0)];
     }
 
     private void Start()
     {
-        for (int c = 0; c < GameData.levels.GetLength(0); c++)
+        for (int c = 0; c < GameData.levelSet.levels.GetLength(0); c++)
         {
             levelSelectButtons[c] = Instantiate(levelSelectButton, levelSelectGrid.transform);
             levelSelectButtons[c].GetComponentInChildren<TextMeshProUGUI>().text = $"{c + 1}";
             int levelIndex = c;
             levelSelectButtons[c].GetComponent<Button>().onClick.AddListener(() => SelectLevel(levelIndex));
             levelSelectButtons[c].GetComponent<Button>().onClick.AddListener(StartGame);
-            levelSelectButtons[c].GetComponent<Button>().interactable = c <= GameData.unlockedLevel;
+            levelSelectButtons[c].GetComponent<Button>().interactable = c <= GameData.playerData.unlockedLevel;
             unlockables[c] = new GameObject();
             unlockables[c].transform.SetParent(unlockableDisplay.transform);
             unlockables[c].transform.localEulerAngles = Vector3.zero;
             unlockables[c].transform.localScale = Vector3.one;
             unlockables[c].transform.localPosition = Vector3.zero;
             unlockables[c].AddComponent<SpriteRenderer>();
-            unlockables[c].GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>(GameData.rewards[c]);
+            unlockables[c].GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>(GameData.levelSet.levels[c].rewardFileName);
             unlockables[c].GetComponent<SpriteRenderer>().sortingOrder = 1;
-            unlockables[c].SetActive(c + 1 <= GameData.unlockedLevel);
+            unlockables[c].SetActive(c + 1 <= GameData.playerData.unlockedLevel);
         }
         
     }
@@ -84,13 +84,13 @@ public class LevelSelectManager : MonoBehaviour
 
     private IEnumerator FadePiecesOut()
     {
-        for (int c = 0; c < GameData.unlockedLevel; c++)
+        for (int c = 0; c < GameData.playerData.unlockedLevel; c++)
         {
             if (fadeOutStagger > 0)
             {
                 yield return new WaitForSeconds(fadeOutStagger);
             }
-            if (c + 1 == GameData.unlockedLevel)
+            if (c + 1 == GameData.playerData.unlockedLevel)
             {
                 yield return StartCoroutine(GameObjectUtils.FadeOut(unlockables[c].GetComponent<SpriteRenderer>(), fadeOutDelay, fadeOutTime));
             }
@@ -106,7 +106,7 @@ public class LevelSelectManager : MonoBehaviour
     {
         yield return FadePiecesOut();
 
-        for (int c = 0; c < GameData.unlockedLevel; c++)
+        for (int c = 0; c < GameData.playerData.unlockedLevel; c++)
         {
             if (fadeInStagger > 0)
             {

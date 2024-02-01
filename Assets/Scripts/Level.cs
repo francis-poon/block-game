@@ -10,10 +10,10 @@ public class Level
     public readonly string rewardFileName;
     public readonly UniqueId id;
 
-    public Level(int[,] level, Vector2 startingLevel, string rewardFileName, UniqueId id)
+    public Level(int[,] level, Vector2 startingPos, string rewardFileName, UniqueId id)
     {
         this.level = level;
-        this.startingPos = startingLevel;
+        this.startingPos = startingPos;
         this.rewardFileName = rewardFileName;
         this.id = id;
     }

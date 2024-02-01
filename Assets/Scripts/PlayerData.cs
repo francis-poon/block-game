@@ -1,12 +1,10 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Xml;
-using UnityEngine;
 
-public class PlayerData : MonoBehaviour
+public class PlayerData
 {
-    public Dictionary<UniqueId, int> bestScores;
     public int unlockedLevel;
+    private Dictionary<UniqueId, int> bestScores;
 
     public PlayerData()
     {
@@ -27,6 +25,22 @@ public class PlayerData : MonoBehaviour
             bestScores[levelId] = score;
             return true;
         }
+        return false;
+    }
+
+    public int GetBestScore(UniqueId levelId)
+    {
+        return bestScores.ContainsKey(levelId) ? bestScores[levelId] : 0;
+    }
+
+    public bool Load()
+    {
+        return false;
+    }
+
+    public bool Save()
+    {
+
         return false;
     }
 }
