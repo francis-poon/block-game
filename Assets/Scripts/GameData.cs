@@ -114,10 +114,8 @@ public static class GameData
     //        new int[] { 1, 1, 0, 0, 0 },
     //        new int[] { 1, 1, 1, 1, 0 }
     //    }, new Vector2(0,0), "sets/1/romeo_14", new UniqueId())
-    //};
-    public static LevelSetData levelSet = LevelSetData.Load("level_set.xml");
-
-
+    //};Path.Combine(new string[] { Application.persistentDataPath, filename })
+    public static LevelSetData levelSet = LevelSetData.Load(Path.Combine(new string[] { "sets", "1", "level_set" }));
 
     public static string homeScreenDisplay = "home";
 }

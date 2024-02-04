@@ -66,8 +66,19 @@ public class PlayerData
 
     public bool Save(string filename)
     {
-        serializer.Serialize(File.Create(Path.Combine(new string[] { Application.persistentDataPath, filename })), this);
-        return false;
+        try
+        {
+            using (FileStream stream = File.Create(Path.Combine(new string[] { Application.persistentDataPath, filename })))
+            {
+                serializer.Serialize(stream, this);
+            }
+            return true;
+        }
+        catch (Exception e)
+        {
+            Debug.LogError(e.ToString());
+            return false;
+        }   
     }
 
     public static PlayerData Load(string filename)
