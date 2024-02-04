@@ -132,6 +132,7 @@ public class GameManager : MonoBehaviour
 
     private void HandleClearedLevel()
     {
+        GameData.playerData.Save("player.xml");
     }
 
     private void HandleClearedSet()

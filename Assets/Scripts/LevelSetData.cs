@@ -7,45 +7,44 @@ using UnityEngine;
 [Serializable]
 public class LevelSetData
 {
-    public readonly Level[] levels;
+    public Level[] levels;
 
+    private static XmlSerializer serializer = new XmlSerializer(typeof(LevelSetData));
 
+    public LevelSetData()
+    {
+        levels = new Level[0];
+    }
+    
     public LevelSetData(Level[] levels)
     {
         this.levels = levels;
-
     }
 
     public bool Save(string filename)
     {
-        //void SaveGame()
-        //{
-        //    BinaryFormatter bf = new BinaryFormatter();
-        //    FileStream file = File.Create(Application.persistentDataPath
-        //                 + "/MySaveData.dat");
-        //    SaveData data = new SaveData();
-        //    data.savedInt = intToSave;
-        //    data.savedFloat = floatToSave;
-        //    data.savedBool = boolToSave;
-        //    bf.Serialize(file, data);
-        //    file.Close();
-        //    Debug.Log("Game data saved!");
-        //}
-        //string json = JsonSerializer.ToJsonString(levels);
-        XmlSerializer serializer = new XmlSerializer(this.levels.GetType());
-        serializer.Serialize(File.OpenWrite(Application.persistentDataPath + filename), this.levels);
-        //File.WriteAllText(Application.persistentDataPath + filename, json);
+        serializer.Serialize(File.OpenWrite(Path.Combine(new string[] { Application.persistentDataPath, filename })), this);
 
         return false;
     }
 
-    public bool Load(string filename)
+    public static LevelSetData Load(string filename)
     {
-        string json = File.OpenText(Application.persistentDataPath + filename).ReadToEnd();
-
-
-        return false;
+        string fullPath = Path.Combine(new string[] { Application.persistentDataPath, filename });
+        if (File.Exists(fullPath))
+        {
+            try
+            {
+                return (LevelSetData)serializer.Deserialize(File.OpenRead(fullPath));
+            }
+            catch(Exception e)
+            {
+                Debug.LogError(e.Message);
+                Debug.Log("Level set data loading failed, using default");
+                return new LevelSetData();
+            }
+        }
+        Debug.Log("Level set data file not found, using default");
+        return new LevelSetData();
     }
-    
-
 }

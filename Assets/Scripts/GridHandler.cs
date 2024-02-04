@@ -33,10 +33,10 @@ public class GridHandler : MonoBehaviour
         
     }
 
-    public void LoadLevel(int[,] level)
+    public void LoadLevel(int[][] level)
     {
         height = level.GetLength(0);
-        width = level.GetLength(1);
+        width = level[0].GetLength(0);
         background = Instantiate(backgroundPrefab, transform);
         background.transform.localScale = new Vector3(width, height, 1);
         background.GetComponent<SpriteRenderer>().sortingLayerName = GameData.GAME_LAYER;
@@ -51,11 +51,11 @@ public class GridHandler : MonoBehaviour
         {
             for (int col = 0; col < width; col++)
             {
-                this.level[row, col] = level[row, col];
+                this.level[row, col] = level[row][col];
                 grid[row, col] = Instantiate(gridSquarePrefab, new Vector2(col + colMod, -(row + rowMod)), Quaternion.identity, transform);
                 grid[row, col].GetComponent<SpriteRenderer>().sortingLayerName = GameData.GAME_LAYER;
                 grid[row, col].GetComponent<SpriteRenderer>().sortingOrder = 1;
-                if (level[row, col] == 0)
+                if (level[row][col] == 0)
                 {
                     grid[row, col].GetComponent<SpriteRenderer>().color = gridHoleColor;
                 }

@@ -14,9 +14,4 @@ public class HomeMenu : MonoBehaviour
     {
         Application.Quit();
     }
-
-    public void Save()
-    {
-        GameData.levelSet.Save("level_set.xml");
-    }
 }

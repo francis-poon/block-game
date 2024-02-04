@@ -1,16 +1,26 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Xml;
+using System.Xml.Serialization;
 using UnityEngine;
 
 public class Level
 {
-    public readonly int[,] level;
-    public readonly Vector2 startingPos;
-    public readonly string rewardFileName;
-    public readonly UniqueId id;
+    public int[][] level;
+    public Vector2 startingPos;
+    public string rewardFileName;
+    [XmlElement("id")]
+    public string idString { get => id.ToString(); set => id = new UniqueId(value); }
 
-    public Level(int[,] level, Vector2 startingPos, string rewardFileName, UniqueId id)
+    [XmlIgnore]
+    public UniqueId id;
+
+    public Level()
+    {
+        
+    }
+
+    public Level(int[][] level, Vector2 startingPos, string rewardFileName, UniqueId id)
     {
         this.level = level;
         this.startingPos = startingPos;
